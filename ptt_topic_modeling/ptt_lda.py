@@ -19,7 +19,7 @@ def board_to_post(board, num):
         text = utils.remove_html(text)
         text = utils.full_to_half(text)
         text = utils.strip_punctuation(text)
-        text = utils.strip_multiple_whitespaces(text)
+        text = utils.strip_multi_spaces(text)
         posts.append(text)
     return posts
 

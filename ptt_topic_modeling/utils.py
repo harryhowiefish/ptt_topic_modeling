@@ -3,20 +3,6 @@ import re
 import string
 
 
-def replace_char(char_list, text):
-    '''
-
-    Parameters
-    ----------
-
-    Returns
-    -------
-    '''
-    for char in char_list:
-        text = text.replace(*char)
-    return text
-
-
 def full_to_half(text):
     '''
     Transform Characters from full to half (Chinese input)
@@ -44,7 +30,7 @@ def remove_html(text):
     return re.sub(r'http://\S+|https://\S+', '', text)
 
 
-def strip_multiple_whitespaces(text):
+def strip_multi_spaces(text):
     '''
 
     Parameters
