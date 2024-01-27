@@ -1,33 +1,26 @@
-import json
-from tqdm import tqdm as tqdm
 from ckiptagger import WS
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 from datetime import datetime
-import ptt_topic_modeling.utils as utils
-import ptt_topic_modeling.crawler as crawler
 
 
-def board_to_post(board, num):
-    links = crawler.crawl_links(board, target_num=num)
-    posts = []
-    for link in tqdm(links.values()):
-        text = crawler.crawl_post(link)
-        if text is None:
-            print(f'fail to crawl the following page: {link}')
-            return
-        text = utils.remove_html(text)
-        text = utils.full_to_half(text)
-        text = utils.strip_punctuation(text)
-        text = utils.strip_multi_spaces(text)
-        posts.append(text)
-    return posts
+# this can be further broken down to posts_to_matrix
+# matrix_to_lda
+# lda_extract_topics
+def posts_to_topic(posts, topic_num=5, top_word=30):
 
+    if topic_num < 0:
+        raise ValueError("topic_num must be non-negative integer")
 
-def posts_to_topic(posts):
+    if top_word < 0:
+        raise ValueError("top_word must be non-negative integer")
 
     print('Working on word separation....')
-    ws = WS("./data")
+    # catch error here
+    try:
+        ws = WS("./data")
+    except FileNotFoundError:
+        print("Can't find model. Please download Ckip model")
     posts = ws(posts)
 
     print('Working on Count Vectorization....')
@@ -36,17 +29,12 @@ def posts_to_topic(posts):
     matrix = cv.fit_transform(posts)
 
     print('Creating LDA....')
-    LDA = LatentDirichletAllocation(n_components=5)
+    LDA = LatentDirichletAllocation(n_components=topic_num)
     LDA.fit(matrix)
-    result = {}
+    result = {'topics': {}}
 
     for index, topic in enumerate(LDA.components_):
-        result[f'topic_{index+1}'] = [
-            cv.get_feature_names_out()[i] for i in topic.argsort()[-30:]]
+        result['topics'][f'topic_{index+1}'] = [
+            cv.get_feature_names_out()[i] for i in topic.argsort()[-top_word:]]
     result['create_time'] = str(datetime.now())
     return result
-
-
-def to_json(d, path):
-    with open(path, 'w', encoding='utf8') as f:
-        json.dump(d, f, ensure_ascii=False)

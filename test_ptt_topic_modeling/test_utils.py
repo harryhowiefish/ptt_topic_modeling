@@ -1,4 +1,6 @@
 import pytest # noqa
+import json
+import os
 import ptt_topic_modeling.utils as utils
 
 
@@ -96,6 +98,19 @@ class TestStripPunctuation(object):
         message = "strip_punctuation('@@ ^_^ :)')" + \
             f"return '{actual}' instead of '{expected}'"
         assert actual == expected, message
+
+
+class TestToJson(object):
+    def test_normal(self, tmpdir):
+        data = {'a': 1, 'b': 2}
+        file = tmpdir.join('output.json')
+        utils.to_json(data, file)
+        expected = {'a': 1, 'b': 2}
+        assert os.path.exists(file), 'export file failed'
+
+        with open(file) as f:
+            loaded_data = json.load(f)
+        assert loaded_data == expected, 'data read does not match data written'
 
 
 '''

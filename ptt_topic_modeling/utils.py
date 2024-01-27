@@ -1,6 +1,7 @@
 import unicodedata
 import re
 import string
+import json
 
 
 def full_to_half(text):
@@ -52,3 +53,8 @@ def strip_punctuation(text):
     -------
     '''
     return re.sub(r'([%s])+' % re.escape(string.punctuation), ' ', text)
+
+
+def to_json(_dict, path):
+    with open(path, 'w', encoding='utf8') as f:
+        json.dump(_dict, f, ensure_ascii=False)

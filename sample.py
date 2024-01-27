@@ -1,5 +1,7 @@
 import sys
+import ptt_topic_modeling.utils as utils
 import ptt_topic_modeling.ptt_lda as ptt_lda
+import ptt_topic_modeling.crawler as crawler
 import warnings
 
 
@@ -9,14 +11,15 @@ def main():
 
     output_path = './result.json'
 
-    posts = ptt_lda.board_to_post(sys.argv[1], int(sys.argv[2]))
+    links = crawler.crawl_links(sys.argv[1], int(sys.argv[2]))
+    posts = crawler.links_to_posts(links)
     topics = ptt_lda.posts_to_topic(posts)
-    ptt_lda.to_json(topics, output_path)
+    utils.to_json(topics, output_path)
     print(f'file saved to {output_path}')
 
     for i in range(1, 6):
         print(f'TOPIC #{i} 前30名詞彙')
-        print(topics[f'topic_{i}'])
+        print(topics['topics'][f'topic_{i}'])
         print('\n')
 
 
