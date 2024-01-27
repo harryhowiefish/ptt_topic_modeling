@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/harryhowiefish/ptt_topic_modeling/graph/badge.svg?token=P8R2XLYX3N)](https://codecov.io/gh/harryhowiefish/ptt_topic_modeling)
+
 ## Introduction
 
 This tool uses Latent Dirichlet Allocation (LDA) to generate topics for any particular PTT bulletin board.
