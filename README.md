@@ -53,7 +53,6 @@ TOPIC #5 前30名詞彙
 ## Working progress
 - expand customization (set min&max_df, excluded words, )
 - tools to download and load local text file without crawling everytime
-- export topic labeling for documents
 - test out [lda2vec](https://github.com/cemoody/lda2vec) for more in depth NLP understanding than the count vector currently used 
 
 
