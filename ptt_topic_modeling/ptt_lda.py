@@ -44,7 +44,9 @@ def posts_to_topic(posts: List[str],
         posts = ws(posts)
     except FileNotFoundError:
         raise FileNotFoundError("Can't find model. Please download Ckip model")
-
+    except AttributeError:
+        raise FileNotFoundError(
+            "Please make sure model_ws is in the data folder")
     logging.info('Working on Count Vectorization....')
     cv = CountVectorizer(max_df=0.7, min_df=0.05)
     posts = [' '.join(post) for post in posts]
