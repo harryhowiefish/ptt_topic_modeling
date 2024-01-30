@@ -176,6 +176,5 @@ def send_request(link: str) -> requests.models.Response:
         raise ConnectionError('No wifi')
     # add response check
     if resp.status_code != 200:
-        print(f"Connection error, error code {resp.status_code}")
         raise ConnectionError('webpage not available')
     return resp
