@@ -38,7 +38,7 @@ class TestCrawlLink(object):
 class TestCrawlPage(object):
 
     def test_output_type(self):
-        link = 'https://www.ptt.cc/bbs/Gossiping/index39279.html'
+        link = 'https://www.ptt.cc/bbs/Gossiping/index.html'
         next, links = crawler.crawl_page(link)
         assert isinstance(next, str), \
             f'expecting string, got {type(next)}'
@@ -61,7 +61,10 @@ class TestCrawlPost(object):
             'M.1675168627.A.117.html'
         result = crawler.crawl_post(link)
 
-        assert isinstance(result, str)
+        assert len(result) == 1, \
+            f'expecting two items in list, got {len(result)}'
+
+        assert isinstance(result[0], str)
 
     def test_check_split_instance(self):
         link = 'https://www.ptt.cc/man/Gossiping/D42E/D454/' + \
@@ -104,7 +107,8 @@ class TestSendRequest(object):
         link = 'https://www.ptt.cc/bbs/asdkc/index.html'
         with pytest.raises(ConnectionError) as excinfo:
             crawler.send_request(link)
-        assert str(excinfo.value) == 'webpage not available'
+        assert str(excinfo.value) == 'webpage not available', \
+            f'expecting "webpage not available", got {str(excinfo.value)}'
 
 
 '''
