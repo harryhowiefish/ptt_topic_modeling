@@ -2,12 +2,26 @@ import requests
 import bs4
 import ptt_topic_modeling.utils as utils
 from tqdm import tqdm
+from typing import Tuple, List
 
 
-def links_to_posts(links):
+def links_to_posts(links: list) -> List[str]:
+    '''
+    Crawl posts from the given list of URLs.
+
+    Parameters
+    ----------
+    links : list
+        list of link to PTT pages
+
+    Returns
+    -------
+    list
+        list of content (comments are included by default)
+    '''
     posts = []
     for link in tqdm(links.values()):
-        text = crawl_post(link)
+        text = crawl_post(link)[0]
         if text is None:
             print(f'fail to crawl the following page: {link}')
             posts.append('')
@@ -20,16 +34,25 @@ def links_to_posts(links):
     return posts
 
 
-def crawl_links(board_name, target_num=1000):
+def crawl_links(board_name: str, target_num: int = 1000) -> dict:
     '''
+    Given a specific board on PTT (e.x. Boy-Girl),
+    crawl the links to the individual posts.
+    Number of links is determined by target_num.
 
     Parameters
     ----------
+    board_name : str
+
+    target_num : int
+        a minimum of 100 is recommended
 
     Returns
+    dict
+        {title: content}
     -------
     '''
-    if target_num < 0:
+    if target_num <= 0:
         raise ValueError("target_num must be non-negative integer")
 
     links = {}
@@ -47,14 +70,23 @@ def crawl_links(board_name, target_num=1000):
     return links
 
 
-def crawl_page(link):
+def crawl_page(link: str) -> Tuple[str, dict]:
     '''
+    Crawl individual links to post from the main pages.
 
     Parameters
     ----------
+    link : str
+        link to the main pages.
+        E.x. https://www.ptt.cc/bbs/Gossiping/index.html
 
     Returns
     -------
+    str
+        the link to the previous page listing.
+        This is used to crawl the next set of posts.
+    dict
+        {title: content}
     '''
     resp = send_request(link)
     resp.encoding = 'utf-8'
@@ -73,14 +105,22 @@ def crawl_page(link):
     return next_page, title_links
 
 
-def crawl_post(link, combine_text=True):
+def crawl_post(link: str, combine_text: bool = True) -> List[str]:
     '''
 
     Parameters
     ----------
+    link : str
+        link to a single PTT post
+    combine_text : bool
+        Whether to combine comment into main text
+        or output it seperately
 
     Returns
     -------
+    list
+        single item [content] if combine_text=True,
+        two items [main_content.text, comment_text] if False
     '''
     resp = send_request(link)
 
@@ -111,19 +151,22 @@ def crawl_post(link, combine_text=True):
         result = main_content.text
         for text in comment_text:
             result += text
-        return result
+        return [result]
     else:
         return [main_content.text, comment_text]
 
 
-def send_request(link):
+def send_request(link: str) -> requests.models.Response:
     '''
 
     Parameters
     ----------
+    link : str
+        Any link to ptt.cc
 
     Returns
     -------
+    requests.models.Response
     '''
     if 'https://www.ptt.cc/' not in link:
         raise ValueError(f'{link} does not belong to PTT')

@@ -1,33 +1,34 @@
+# PTT Topic Modeling 
+
 [![codecov](https://codecov.io/gh/harryhowiefish/ptt_topic_modeling/graph/badge.svg?token=P8R2XLYX3N)](https://codecov.io/gh/harryhowiefish/ptt_topic_modeling)
 
-## Introduction
+## Description
+Use Latent Dirichlet Allocation (LDA) to generate topics for PTT bulletin boards.
 
-This tool uses Latent Dirichlet Allocation (LDA) to generate topics for any particular PTT bulletin board.
+## Why
+- Provide additional insight beyond semantics analysis
+- Quick and easy way to extract latest topics and trends for PTT
+
 
 ## Usage
 
-Install ckiptagger
+Install requirements & Download WS model
 ```
-pip install -U ckiptagger[tf,gdown]
+pip install -r requirements.txt
+python3 get_ckip_model.py
 ```
 
-Download WS model:
-```python
-from ckiptagger import data_utils
-data_utils.download_data_gdown("./") # gdrive-ckip
-```
-or download the models from the following mirror sites
-- [iis-ckip](http://ckip.iis.sinica.edu.tw/data/ckiptagger/data.zip)
-- [gdrive-ckip](https://drive.google.com/drive/folders/105IKCb88evUyLKlLondvDBoh7Dy_I1tm)
-- [gdrive-jacobvsdanniel](https://drive.google.com/drive/folders/15BDjL2IaX3eYdFVzT422VwCb743Hrbi3)
+or download the models from the following mirror sites:
 
-Run ptt_ida.py
+[Sinica](http://ckip.iis.sinica.edu.tw/data/ckiptagger/data.zip),   [gdrive](https://drive.google.com/drive/folders/105IKCb88evUyLKlLondvDBoh7Dy_I1tm),  [gdrive-backup](https://drive.google.com/drive/folders/15BDjL2IaX3eYdFVzT422VwCb743Hrbi3)
+
+Make sure data folder is in directory, then run sample.py
 ```
-python ptt_ida.py 看版名稱 要分析的文章數量
+python sample.py 看版名稱 要分析的文章數量
 ```
 ## Example
 ```
-python ptt_lda.py Boy-Girl 100
+python sample.py Boy-Girl 100
 ```
 
 ```
@@ -53,7 +54,7 @@ TOPIC #5 前30名詞彙
 
 
 ## Working progress
-- expand customization (set min&max_df, excluded words, )
+- expand customization (set min&max_df, excluded words)
 - tools to download and load local text file without crawling everytime
 - test out [lda2vec](https://github.com/cemoody/lda2vec) for more in depth NLP understanding than the count vector currently used 
 

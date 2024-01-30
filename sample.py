@@ -7,6 +7,7 @@ import warnings
 
 def main():
     # Ckiptagger will produce tensorflow deprication warning
+
     warnings.filterwarnings("ignore", category=UserWarning)
 
     output_path = './result.json'
